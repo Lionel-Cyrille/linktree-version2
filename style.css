@@ -1,0 +1,296 @@
+:root {
+    /* Définition des variables de couleur */
+    --color-primary: #c77dff;
+    --color-secondary: #3c096c;
+    --glass-bg: rgba(255, 255, 255, 0.05); /* Arrière-plan en mode glassmorphism */
+    --glass-border: rgba(255, 255, 255, 0.1); /* Bordure du verre */
+    --glass-blur: 8px; /* Flou de l'arrière-plan */
+    --aura-color: rgba(199, 125, 255, 0.3); /* Couleur de l'aura */
+    --glow-color: rgba(255, 255, 255, 0.2); /* Couleur du glow */
+}
+
+* {
+    /* Reset des marges et des paddings par défaut */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Permet d'assurer que padding et border sont inclus dans la taille totale */
+}
+
+body {
+    /* Styles de base pour le body */
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); /* Dégradé en arrière-plan */
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    position: relative;
+    overflow: hidden; /* Cache les éléments qui dépassent */
+}
+
+.noise {
+    /* Effet de bruit (static) en arrière-plan */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.75"/></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.05"/></svg>');
+    pointer-events: none; /* Permet d'éviter que le bruit interfère avec les clics */
+}
+
+.container {
+    /* Conteneur principal avec effet glassmorphism */
+    width: 100%;
+    max-width: 500px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: 2rem;
+    padding: 2rem;
+    position: relative;
+    box-shadow: 
+        0 8px 32px 0 rgba(31, 38, 135, 0.2), /* Ombre extérieure */
+        inset 0 0 32px 0 rgba(255, 255, 255, 0.05); /* Ombre intérieure */
+}
+
+.theme-toggle {
+    /* Bouton pour changer le thème */
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    /* Animation du bouton au survol */
+    transform: rotate(180deg); /* Rotation de 180° */
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.profile-container {
+    /* Conteneur pour l'image de profil avec un effet 3D */
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: 2rem auto;
+    cursor: pointer;
+    perspective: 1000px; /* Crée la perspective 3D */
+}
+
+.profile-prism {
+    /* Effet de prisme autour de l'image de profil */
+    position: absolute;
+    inset: -20%;
+    background: conic-gradient(
+        from 0deg,
+        transparent,
+        var(--aura-color),
+        transparent 60%
+    );
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s;
+    animation: rotatePrism 8s linear infinite; /* Rotation infinie du prisme */
+}
+
+.profile-aura {
+    /* Aura autour de l'image de profil */
+    position: absolute;
+    inset: -10%;
+    background: radial-gradient(
+        circle at center,
+        var(--aura-color),
+        transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+@keyframes rotatePrism {
+    /* Animation de rotation du prisme */
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.1); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+
+.profile-container:hover .profile-prism,
+.profile-container:hover .profile-aura {
+    /* Affichage de l'aura et du prisme au survol */
+    opacity: 1;
+}
+
+.profile-image {
+    /* Image de profil avec rotation 3D */
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid var(--glass-border);
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    transition: transform 0.6s ease;
+    transform-style: preserve-3d;
+}
+
+.profile-container:hover .profile-image {
+    /* Effet de flip 3D au survol */
+    transform: rotateY(180deg);
+}
+
+.profile-image img {
+    /* Styles pour l'image à l'intérieur du cercle */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+    transform-style: preserve-3d;
+}
+
+.profile-info {
+    /* Informations sur le profil */
+    text-align: center;
+    color: white;
+    margin-bottom: 2rem;
+}
+
+.profile-name {
+    /* Style du nom de profil */
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 10px var(--aura-color); /* Ombre autour du texte */
+}
+
+.profile-bio {
+    opacity: 0.8;
+}
+
+.links {
+    /* Conteneur des liens */
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.link-button {
+    /* Bouton de lien avec effet de glow */
+    padding: 1rem;
+    border-radius: 1rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.link-glow {
+    /* Effet de glow autour du bouton */
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle at center,
+        var(--glow-color),
+        transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+
+.link-button:hover {
+    /* Animation du bouton au survol */
+    transform: translateY(-2px);
+}
+
+.link-button:hover .link-glow {
+    /* Animation du glow lors du survol */
+    opacity: 1;
+    animation: rotateGlow 2s linear infinite;
+}
+
+@keyframes rotateGlow {
+    /* Rotation infinie du glow */
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.social-links {
+    /* Liens sociaux disposés horizontalement */
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.social-link {
+    /* Bouton social avec effet de glow au survol */
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.social-link::after {
+    /* Aura de glow derrière les icônes sociales */
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--aura-color);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.social-link:hover {
+    /* Animation du bouton au survol */
+    transform: translateY(-2px) scale(1.1);
+}
+
+.social-link:hover::after {
+    /* Affichage de l'aura au survol */
+    opacity: 1;
+}
+
+@media (max-width: 768px) {
+    /* Adaptations pour les écrans plus petits */
+    .container {
+        margin: 1rem;
+    }
+    
+    .profile-container {
+        width: 120px;
+        height: 120px;
+    }
+}
